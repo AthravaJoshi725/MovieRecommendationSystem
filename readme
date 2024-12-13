@@ -1,0 +1,71 @@
+# Movie Recommender System
+
+This is a Streamlit-based movie recommender system that provides movie recommendations based on a selected movie. It utilizes a pre-trained similarity matrix and movie data, and fetches movie posters using the TMDb (The Movie Database) API.
+
+## Workflow Overview
+
+#### 1. **Loading Data**
+
+- **Purpose:** Load necessary data files required for the movie recommendation process.
+- **Files Loaded:**
+  - `similarity.pkl`: A precomputed similarity matrix storing how similar each movie is to others.
+  - `movies_dict.pkl`: A dictionary containing movie data (titles, IDs, etc.), which is converted into a DataFrame.
+- **Error Handling:**
+  - If the files are not found, an error message is displayed using `st.error()`, and execution is stopped with `st.stop()`.
+
+#### 2. **Defining Helper Functions**
+
+##### a. `get_poster(id)`
+
+- **Purpose:** Fetches the movie poster using the movie's ID from the TMDb API.
+- **Steps:**
+  - Makes a GET request to the TMDb API with the movie ID to retrieve poster images.
+  - If successful, returns the URL of the poster.
+  - If no poster is found or an error occurs, returns a placeholder image.
+- **Error Handling:** If an error occurs during the API request, a warning message is displayed using `st.warning()`.
+
+##### b. `recommend(movie)`
+
+- **Purpose:** Fetches recommended movies based on the selected movie.
+- **Steps:**
+  - Checks if the selected movie exists in the dataset (`movies` DataFrame).
+  - Retrieves the index of the selected movie from the `movies` DataFrame.
+  - Fetches similarity scores from the `similarity` matrix for the selected movie.
+  - Sorts the similarity scores and selects the top 5 most similar movies.
+  - Fetches movie titles and posters for each recommended movie using `get_poster()`.
+  - Returns two lists: one with movie titles and the other with corresponding poster URLs.
+- **Error Handling:** If an error occurs during the recommendation process, an error message is displayed using `st.error()`.
+
+#### 3. **Streamlit App Layout**
+
+##### a. `st.title()`
+
+- **Purpose:** Sets the title of the app as "Movie Recommender System."
+
+##### b. `st.selectbox()`
+
+- **Purpose:** Displays a dropdown list with all available movie titles. The user selects a movie to get recommendations.
+
+##### c. `st.button('Recommend')`
+
+- **Purpose:** Triggers the `recommend()` function when clicked, providing movie recommendations based on the selected movie.
+
+##### d. **Display Recommendations**
+
+- **Columns Layout:**
+  - Displays the recommended movies in a row of 5 columns using `st.columns(5)`.
+  - For each recommended movie:
+    - Displays the movie title using `st.header()`.
+    - Displays the movie poster using `st.image()`.
+  - If fewer than 5 recommendations are returned, the remaining columns are left empty using `st.empty()`.
+
+#### 4. **Error Handling**
+
+- Provides informative messages when:
+  - Files are not found.
+  - The selected movie does not exist in the dataset.
+  - There is an error during the recommendation process.
+
+---
+
+This workflow provides a step-by-step breakdown of how the Movie Recommender System operates from loading data to displaying the results in a user-friendly Streamlit interface.
